@@ -6,7 +6,7 @@ metadata:
 spec:
   replicas: 1
   strategy:
-    type: Recreate # Evita errores de bloqueo de SQLite al actualizar
+    type: Recreate 
   selector:
     matchLabels:
       app: kavita
@@ -36,9 +36,9 @@ spec:
       volumes:
       - name: config
         hostPath:
-          path: /opt/neravy-books/kavita/config # Crea esta carpeta primero
+          path: /opt/neravy-books/kavita/config
           type: DirectoryOrCreate
       - name: libros
-          hostPath:
-            path: /opt/neravy-books/kavita/libros # Crea esta carpeta primero
-            type: DirectoryOrCreate
+        hostPath:
+          path: /opt/neravy-books/kavita/libros
+          type: DirectoryOrCreate

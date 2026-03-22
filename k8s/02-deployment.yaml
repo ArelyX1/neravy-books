@@ -35,8 +35,10 @@ spec:
           mountPath: /data/books
       volumes:
       - name: config
-        persistentVolumeClaim:
-          claimName: kavita-config-pvc
+        hostPath:
+          path: /opt/neravy-books/kavita/config # Crea esta carpeta primero
+          type: DirectoryOrCreate
       - name: libros
-        persistentVolumeClaim:
-          claimName: kavita-libros-pvc
+          hostPath:
+            path: /opt/neravy-books/kavita/libros # Crea esta carpeta primero
+            type: DirectoryOrCreate

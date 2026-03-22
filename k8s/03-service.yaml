@@ -8,13 +8,13 @@ spec:
   selector:
     app: ubooquity
   ports:
-    - name: library-port
+    - name: library
       protocol: TCP
-      port: 8443        # Puerto para el iPhone/Cloudflare
-      targetPort: 2202  # Puerto interno real
-      nodePort: 30443   # Puerto físico en Ubuntu
-    - name: admin-port
+      port: 8443        # El que usarás con Cloudflare
+      targetPort: 2202  # Interno de la biblioteca
+      nodePort: 30443   # Acceso local en 192.168.1.100:30443
+    - name: admin
       protocol: TCP
       port: 2203
       targetPort: 2203
-      nodePort: 32203   # Puerto para la configuración inicial
+      nodePort: 32203   # Acceso local para configuración inicial

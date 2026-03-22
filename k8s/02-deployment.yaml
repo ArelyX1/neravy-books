@@ -33,16 +33,14 @@ spec:
         - containerPort: 2203
           name: admin
         volumeMounts:
-        - name: config
+        - name: config-vol
           mountPath: /config
-        - name: books
+        - name: books-vol
           mountPath: /books
       volumes:
-      - name: config
-        hostPath:
-          path: /opt/neravy-books/ubooquity/config
-          type: DirectoryOrCreate
-      - name: books
-        hostPath:
-          path: /opt/neravy-books/ubooquity/books
-          type: DirectoryOrCreate
+      - name: config-vol
+        persistentVolumeClaim:
+          claimName: ubooquity-config-pvc
+      - name: books-vol
+        persistentVolumeClaim:
+          claimName: ubooquity-books-pvc

@@ -22,19 +22,6 @@ spec:
         ports:
         - containerPort: 5000
           name: http-web
-        # Aumentamos el tiempo inicial porque tu servidor local necesita procesar la DB
-        startupProbe: # Esta sonda se encarga solo del arranque
-          httpGet:
-            path: /
-            port: 5000
-          failureThreshold: 30 # Lo intentará 30 veces
-          periodSeconds: 10    # Cada 10 segundos (Total 5 minutos de margen)
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 5000
-          initialDelaySeconds: 60 # Espera un minuto antes de empezar a vigilar
-          periodSeconds: 20
         volumeMounts:
         - name: config
           mountPath: /kavita/config

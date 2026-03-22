@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kavita
+  namespace: biblioteca
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate # Evita errores de bloqueo de SQLite al actualizar
+  selector:
+    matchLabels:
+      app: kavita
+  template:
+    metadata:
+      labels:
+        app: kavita
+    spec:
+      containers:
+      - name: kavita
+        image: jvmilazz0/kavita:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+          name: http-web
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        volumeMounts:
+        - name: config
+          mountPath: /kavita/config
+        - name: libros
+          mountPath: /data/books
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: kavita-config-pvc
+      - name: libros
+        persistentVolumeClaim:
+          claimName: kavita-libros-pvc

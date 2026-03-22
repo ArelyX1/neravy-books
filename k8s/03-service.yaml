@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kavita-service
+  namespace: biblioteca
+spec:
+  type: LoadBalancer 
+  selector:
+    app: kavita
+  ports:
+    - name: https-cloudflare
+      protocol: TCP
+      port: 8443
+      targetPort: 5000

@@ -1,15 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: kavita-service
+  name: ubooquity-service
   namespace: biblioteca
 spec:
-  type: NodePort           # Cambiado de LoadBalancer a NodePort
+  type: NodePort
   selector:
-    app: kavita
+    app: ubooquity
   ports:
-    - name: http-web
+    - name: library-port
       protocol: TCP
-      port: 8888           # Puerto interno del service
-      targetPort: 5000     # Puerto donde escucha el pod de Kavita
-      nodePort: 30088      # El puerto real que abriremos en Ubuntu
+      port: 8443        # Puerto para el iPhone/Cloudflare
+      targetPort: 2202  # Puerto interno real
+      nodePort: 30443   # Puerto físico en Ubuntu
+    - name: admin-port
+      protocol: TCP
+      port: 2203
+      targetPort: 2203
+      nodePort: 32203   # Puerto para la configuración inicial

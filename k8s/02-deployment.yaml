@@ -1,38 +1,48 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kavita
+  name: ubooquity
   namespace: biblioteca
 spec:
   replicas: 1
   strategy:
-    type: Recreate 
+    type: Recreate
   selector:
     matchLabels:
-      app: kavita
+      app: ubooquity
   template:
     metadata:
       labels:
-        app: kavita
+        app: ubooquity
     spec:
       containers:
-      - name: kavita
-        image: jvmilazz0/kavita:latest
-        imagePullPolicy: IfNotPresent
+      - name: ubooquity
+        image: linuxserver/ubooquity:latest
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "America/Lima"
+        - name: MAX_MEM
+          value: "512"
         ports:
-        - containerPort: 5000
-          name: http-web
+        - containerPort: 2202
+          name: library
+        - containerPort: 2203
+          name: admin
         volumeMounts:
         - name: config
-          mountPath: /kavita/config
-        - name: libros
-          mountPath: /data/books
+          mountPath: /config
+        - name: books
+          mountPath: /books
       volumes:
       - name: config
         hostPath:
-          path: /opt/neravy-books/kavita/config
+          path: /opt/neravy-books/ubooquity/config
           type: DirectoryOrCreate
-      - name: libros
+      - name: books
         hostPath:
-          path: /opt/neravy-books/kavita/libros
+          path: /opt/neravy-books/ubooquity/books
           type: DirectoryOrCreate

@@ -8,7 +8,7 @@ spec:
   selector:
     app: kavita
   ports:
-    - name: https-cloudflare
+    - name: http-web
       protocol: TCP
       port: 8443
       targetPort: 5000

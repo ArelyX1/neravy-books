@@ -1,20 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ubooquity-service
+  name: indexador-service
   namespace: biblioteca
 spec:
   type: NodePort
   selector:
-    app: ubooquity
+    app: indexador
   ports:
-    - name: library
-      protocol: TCP
-      port: 8443
-      targetPort: 2202
-      nodePort: 30443
-    - name: admin
-      protocol: TCP
-      port: 2203
-      targetPort: 2203
-      nodePort: 32203
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30443 # Tu puerta de entrada desde Cloudflare

@@ -1,47 +1,23 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: ubooquity-config-pv
+  name: libros-pv
 spec:
   capacity:
-    storage: 2Gi
+    storage: 20Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /opt/neravy-books/ubooquity/config
+    path: /opt/neravy-books/ubooquity/books # Mantenemos tu ruta actual
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: ubooquity-config-pvc
+  name: libros-pvc
   namespace: biblioteca
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: ubooquity-books-pv
-spec:
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /opt/neravy-books/ubooquity/books
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: ubooquity-books-pvc
-  namespace: biblioteca
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
+      storage: 20Gi

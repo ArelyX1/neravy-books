@@ -1,55 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: biblioteca
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name localhost;
+        location / {
+            root /usr/share/nginx/html;
+            autoindex on;        # Activa el listado de archivos
+            autoindex_exact_size off;
+            autoindex_localtime on;
+            charset utf-8;
+        }
+    }
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ubooquity
+  name: indexador-libros
   namespace: biblioteca
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
-      app: ubooquity
+      app: indexador
   template:
     metadata:
       labels:
-        app: ubooquity
+        app: indexador
     spec:
-      # ELIMINAMOS el securityContext de aquí porque rompe el inicio de LinuxServer
       containers:
-      - name: ubooquity
-        image: linuxserver/ubooquity:latest
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        - name: TZ
-          value: "America/Lima"
-        - name: MAX_MEM
-          value: "256"
-        - name: JAVA_OPTS
-          value: "-Djava.security.egd=file:/dev/./urandom -XX:+UseSerialGC"
+      - name: nginx
+        image: nginx:alpine
         ports:
-        - containerPort: 2202
-          name: library
-        - containerPort: 2203
-          name: admin
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "100m"
-          limits:
-            memory: "512Mi"
+        - containerPort: 80
         volumeMounts:
-        - name: config-vol
-          mountPath: /config
-        - name: books-vol
-          mountPath: /books
+        - name: libros-storage
+          mountPath: /usr/share/nginx/html
+        - name: config-volume
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+        resources:
+          limits:
+            memory: "64Mi" # Sobra RAM por todos lados
+            cpu: "50m"
       volumes:
-      - name: config-vol
+      - name: libros-storage
         persistentVolumeClaim:
-          claimName: ubooquity-config-pvc
-      - name: books-vol
-        persistentVolumeClaim:
-          claimName: ubooquity-books-pvc
+          claimName: libros-pvc
+      - name: config-volume
+        configMap:
+          name: nginx-config

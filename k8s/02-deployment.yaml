@@ -15,6 +15,11 @@ spec:
       labels:
         app: ubooquity
     spec:
+      # Forzamos los permisos de usuario a nivel de Pod
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
       - name: ubooquity
         image: linuxserver/ubooquity:latest
@@ -27,7 +32,7 @@ spec:
           value: "America/Lima"
         - name: MAX_MEM
           value: "256"
-        # ESTO ES CLAVE: Acelera el login y el manejo de DB en sistemas lentos
+        # Acelera el login y usa el recolector de basura más ligero
         - name: JAVA_OPTS
           value: "-Djava.security.egd=file:/dev/./urandom -XX:+UseSerialGC"
         ports:

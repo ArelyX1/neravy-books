@@ -10,11 +10,11 @@ spec:
   ports:
     - name: library
       protocol: TCP
-      port: 8443        # El que usarás con Cloudflare
-      targetPort: 2202  # Interno de la biblioteca
-      nodePort: 30443   # Acceso local en 192.168.1.100:30443
+      port: 8443
+      targetPort: 2202
+      nodePort: 30443
     - name: admin
       protocol: TCP
       port: 2203
       targetPort: 2203
-      nodePort: 32203   # Acceso local para configuración inicial
+      nodePort: 32203

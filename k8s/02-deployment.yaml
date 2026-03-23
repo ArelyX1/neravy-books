@@ -25,13 +25,20 @@ spec:
           value: "1000"
         - name: TZ
           value: "America/Lima"
+        # Bajamos de 512 a 256 para que el sistema no se congele
         - name: MAX_MEM
-          value: "512"
+          value: "256" 
         ports:
         - containerPort: 2202
           name: library
         - containerPort: 2203
           name: admin
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi" # Techo máximo para proteger tu RAM física
         volumeMounts:
         - name: config-vol
           mountPath: /config
@@ -43,4 +50,56 @@ spec:
           claimName: ubooquity-config-pvc
       - name: books-vol
         persistentVolumeClaim:
-          claimName: ubooquity-books-pvc
+          claimName: ubooquity-books-pvcapiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: ubooquity
+            namespace: biblioteca
+          spec:
+            replicas: 1
+            strategy:
+              type: Recreate
+            selector:
+              matchLabels:
+                app: ubooquity
+            template:
+              metadata:
+                labels:
+                  app: ubooquity
+              spec:
+                containers:
+                - name: ubooquity
+                  image: linuxserver/ubooquity:latest
+                  env:
+                  - name: PUID
+                    value: "1000"
+                  - name: PGID
+                    value: "1000"
+                  - name: TZ
+                    value: "America/Lima"
+                  # Bajamos de 512 a 256 para que el sistema no se congele
+                  - name: MAX_MEM
+                    value: "256" 
+                  ports:
+                  - containerPort: 2202
+                    name: library
+                  - containerPort: 2203
+                    name: admin
+                  resources:
+                    requests:
+                      memory: "256Mi"
+                      cpu: "100m"
+                    limits:
+                      memory: "512Mi" # Techo máximo para proteger tu RAM física
+                  volumeMounts:
+                  - name: config-vol
+                    mountPath: /config
+                  - name: books-vol
+                    mountPath: /books
+                volumes:
+                - name: config-vol
+                  persistentVolumeClaim:
+                    claimName: ubooquity-config-pvc
+                - name: books-vol
+                  persistentVolumeClaim:
+                    claimName: ubooquity-books-pvc

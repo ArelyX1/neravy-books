@@ -27,6 +27,9 @@ spec:
           value: "America/Lima"
         - name: MAX_MEM
           value: "256"
+        # ESTO ES CLAVE: Acelera el login y el manejo de DB en sistemas lentos
+        - name: JAVA_OPTS
+          value: "-Djava.security.egd=file:/dev/./urandom -XX:+UseSerialGC"
         ports:
         - containerPort: 2202
           name: library

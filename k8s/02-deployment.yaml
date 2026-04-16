@@ -30,6 +30,8 @@ data:
                 mime = "application/pdf"
             elif ext == "epub":
                 mime = "application/epub+zip"
+            elif ext == "cbr":
+                mime = "application/vnd.comicbook-rar"
             else:
                 mime = "application/octet-stream"
 

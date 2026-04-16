@@ -14,8 +14,16 @@ data:
         if not os.path.exists(path):
             return
         
-        # Escaneamos archivos válidos
-        files = [f for f in os.listdir(path) if f != 'opds.xml' and not f.startswith('.')]
+        # Escaneamos archivos válidos con validación de ruta
+        def is_safe_path(base, filename):
+            safe = os.path.abspath(os.path.join(base, filename))
+            return safe.startswith(os.path.abspath(base))
+        
+        files = [f for f in os.listdir(path) 
+                 if f != 'opds.xml' 
+                 and not f.startswith('.')
+                 and '..' not in f
+                 and is_safe_path(path, f)]
         
         xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
         xml += '<feed xmlns="http://www.w3.org/2005/Atom" xmlns:opds="http://opds-spec.org/2010/catalog">\n'
@@ -35,12 +43,13 @@ data:
             else:
                 mime = "application/octet-stream"
 
+            safe_name = ''.join(c for c in f if c.isprintable() and ord(c) < 128)
             xml += '  <entry>\n'
-            xml += f'    <title>{escape(f)}</title>\n'
-            xml += f'    <id>tag:neravy.us,2026:{escape(f)}</id>\n'
+            xml += f'    <title>{escape(safe_name)}</title>\n'
+            xml += f'    <id>tag:neravy.us,2026:{escape(safe_name)}</id>\n'
             xml += f'    <updated>{time.strftime("%Y-%m-%dT%H:%M:%SZ")}</updated>\n'
             xml += '    <content type="text">Disponible en Poteto-Serv</content>\n'
-            xml += f'    <link rel="http://opds-spec.org/acquisition" href="{escape(f)}" type="{mime}"/>\n'
+            xml += f'    <link rel="http://opds-spec.org/acquisition" href="{escape(safe_name)}" type="{mime}"/>\n'
             xml += '  </entry>\n'
         
         xml += '</feed>'
